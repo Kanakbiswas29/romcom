@@ -9,7 +9,10 @@ const watchlistRoutes = require('./routes/watchlist');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ["https://fsd-2-beige.vercel.app"],
+  credentials: true
+}));
 app.use(express.json());
 
 // Routes
