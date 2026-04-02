@@ -14,7 +14,8 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:5173",
-      "https://fsd-2-beige.vercel.app"
+      "https://fsd-2-beige.vercel.app",
+      "https://romcom-roan.vercel.app"
     ],
     methods: ["GET","POST","PUT","DELETE"],
     credentials: true
