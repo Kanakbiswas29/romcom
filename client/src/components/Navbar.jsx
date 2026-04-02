@@ -20,11 +20,9 @@ const Navbar = () => {
       </Link>
       <div className="nav-links">
         <Link to="/" className="nav-link">Home</Link>
+        <Link to="/watchlist" className="nav-link">My Watchlist 💖</Link>
         {user ? (
-          <>
-            <Link to="/watchlist" className="nav-link">My Watchlist 💖</Link>
-            <span className="nav-link" style={{ cursor: 'pointer' }} onClick={handleLogout}>Log Out</span>
-          </>
+          <span className="nav-link" style={{ cursor: 'pointer' }} onClick={handleLogout}>Log Out</span>
         ) : (
           <>
             <Link to="/login" className="nav-link">Login</Link>
