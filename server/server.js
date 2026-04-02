@@ -11,12 +11,7 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:5173",
-      "https://fsd-2-beige.vercel.app",
-      "https://romcom-roan.vercel.app"
-    ],
+    origin: true,
     methods: ["GET","POST","PUT","DELETE"],
     credentials: true
   })
