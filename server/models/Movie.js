@@ -17,6 +17,10 @@ const movieSchema = new mongoose.Schema({
   posterUrl: {
     type: String,
   }
-}, { timestamps: true });
+}, { 
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
 
 module.exports = mongoose.model('Movie', movieSchema);

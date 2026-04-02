@@ -15,7 +15,7 @@ const decades = [
     subtitle: 'Love Redefined',
     emoji: '🌹',
     gradient: 'linear-gradient(135deg, #f8bbda 0%, #e991c0 40%, #c2649a 100%)',
-    count: 20,
+    count: 22,
   },
   {
     id: '2020s',
@@ -23,7 +23,7 @@ const decades = [
     subtitle: 'Modern Love Stories',
     emoji: '✨',
     gradient: 'linear-gradient(135deg, #fde2f3 0%, #f5b8e0 40%, #e07bbf 100%)',
-    count: 26,
+    count: 27,
   },
 ];
 

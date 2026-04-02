@@ -25,7 +25,11 @@ const watchlistSchema = new mongoose.Schema({
     type: String,
     default: ''
   }
-}, { timestamps: true });
+}, { 
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
 
 // A user should only have a movie once in their watchlist
 watchlistSchema.index({ user: 1, movie: 1 }, { unique: true });

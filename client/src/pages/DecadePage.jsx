@@ -16,7 +16,7 @@ const DecadePage = () => {
   const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [addedIds, setAddedIds] = useState(new Set());
+  const [wishlist, setWishlist] = useState([]);
   const [search, setSearch] = useState('');
 
   const info = decadeInfo[decade] || { emoji: '💖', subtitle: '', color: '#ff69b4' };
@@ -36,14 +36,51 @@ const DecadePage = () => {
     fetchMovies();
   }, [decade]);
 
-  const handleAdd = async (movieId) => {
+  useEffect(() => {
+    const fetchWatchlist = async () => {
+      if (!user) {
+        setWishlist([]);
+        return;
+      }
+      try {
+        const res = await api.get('/watchlist');
+        // Extract movie 'id' (virtual) from the populated movie field
+        const ids = res.data.map(item => item.movie?.id || item.movie?._id);
+        setWishlist(ids);
+      } catch (err) {
+        console.error('Failed to fetch wishlist:', err);
+      }
+    };
+    fetchWatchlist();
+  }, [user]);
+
+  const toggleWishlist = async (movieId) => {
     if (!user) return navigate('/login');
+    
+    const isAdded = wishlist.includes(movieId);
+    
+    // Optimistic UI update: local state first for instant feel!
+    setWishlist(prev => 
+      isAdded 
+        ? prev.filter(id => id !== movieId) 
+        : [...prev, movieId]
+    );
+    
     try {
-      await api.post('/watchlist', { movieId });
-      setAddedIds(prev => new Set([...prev, movieId]));
+      if (!isAdded) {
+        await api.post('/watchlist', { movieId });
+      } else {
+        await api.delete(`/watchlist/movie/${movieId}`);
+      }
     } catch (err) {
-      if (err.response?.data?.message?.includes('already')) {
-        setAddedIds(prev => new Set([...prev, movieId]));
+      console.error('Backend toggle sync failed:', err);
+      // If it fails with already/missing, we stay synced, otherwise revert
+      if (err.response?.status !== 400 && err.response?.status !== 404) {
+        setWishlist(prev => 
+          isAdded 
+            ? [...prev, movieId] 
+            : prev.filter(id => id !== movieId)
+        );
       }
     }
   };
@@ -95,14 +132,14 @@ const DecadePage = () => {
                   </div>
                 </div>
                 <button
-                  className={`movie-list-heart ${addedIds.has(movie._id) ? 'added' : ''}`}
-                  onClick={() => handleAdd(movie._id)}
+                  className={`movie-list-heart ${wishlist.includes(movie.id) ? 'added' : ''}`}
+                  onClick={() => toggleWishlist(movie.id)}
                   title="Add to Watchlist"
                 >
                   <Heart
                     size={20}
-                    fill={addedIds.has(movie._id) ? 'var(--deep-pink)' : 'none'}
-                    color={addedIds.has(movie._id) ? 'var(--deep-pink)' : 'var(--accent-pink)'}
+                    fill={wishlist.includes(movie.id) ? 'var(--deep-pink)' : 'none'}
+                    color={wishlist.includes(movie.id) ? 'var(--deep-pink)' : 'var(--accent-pink)'}
                   />
                 </button>
               </li>
